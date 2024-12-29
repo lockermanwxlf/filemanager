@@ -35,7 +35,7 @@ compose.desktop {
         mainClass = "com.lockermanwxlf.filemanager.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.AppImage)
             packageName = "com.lockermanwxlf.filemanager"
             packageVersion = "1.0.0"
         }
