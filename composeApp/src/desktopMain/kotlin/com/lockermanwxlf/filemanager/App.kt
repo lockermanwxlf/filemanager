@@ -1,10 +1,14 @@
 package com.lockermanwxlf.filemanager
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.lockermanwxlf.filemanager.ui.FilesDisplay
+import com.lockermanwxlf.filemanager.ui.SideBar
 import com.lockermanwxlf.filemanager.ui.TopBar
 import com.lockermanwxlf.filemanager.viewmodels.MainViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -18,17 +22,14 @@ fun App(
         Scaffold(
             topBar = {
                 TopBar(vm)
-            },
-            drawerContent = {
-                Column {
-                    listOf("hello", "goodbye", "thing here").forEach {
-                        Text(it)
-                    }
-                }
-            },
-            drawerShape = MaterialTheme.shapes.small
-        ) {
-
+            }
+        ) { innerPadding ->
+            Row(
+                modifier = Modifier.fillMaxSize().padding(innerPadding)
+            ) {
+                SideBar()
+                FilesDisplay(vm)
+            }
         }
     }
 }

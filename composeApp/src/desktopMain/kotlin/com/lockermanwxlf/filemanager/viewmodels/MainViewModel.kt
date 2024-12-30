@@ -4,9 +4,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.Path
 import kotlin.io.path.exists
+import kotlin.math.max
+import kotlin.math.min
 
 class MainViewModel : ViewModel() {
     var currentTypedInPath by mutableStateOf(System.getProperty("user.home")!!)
@@ -21,7 +24,21 @@ class MainViewModel : ViewModel() {
     var searchStatus by mutableStateOf(SearchStatus.OK)
         private set
 
+    var files by mutableStateOf(listOf<File>())
+        private set
+
+    val settings = MainSettings()
+
     private val pathHistory = ArrayDeque<Path>()
+
+    private fun setFiles() {
+        files = currentPath.toFile().listFiles()?.toList() ?: listOf()
+    }
+
+
+    init {
+        setFiles()
+    }
 
     fun navigateBack() {
         previousPath?.let {
@@ -30,6 +47,7 @@ class MainViewModel : ViewModel() {
             searchStatus = SearchStatus.OK
             pathHistory.removeLastOrNull()
             previousPath = pathHistory.lastOrNull()
+            setFiles()
         }
     }
 
@@ -56,6 +74,7 @@ class MainViewModel : ViewModel() {
             previousPath = currentPath
             pathHistory.addLast(currentPath)
             currentPath = path
+            setFiles()
         }
         searchStatus = if (path.exists()) SearchStatus.OK else SearchStatus.BAD
     }
@@ -64,6 +83,26 @@ class MainViewModel : ViewModel() {
         currentTypedInPath = value
         searchStatus = SearchStatus.NONE
     }
+}
+
+class MainSettings {
+    var fileDisplaySize by mutableStateOf(150)
+        private set
+    var showHiddenFiles by mutableStateOf(false)
+        private set
+
+    fun toggleShowHiddenFiles() {
+        showHiddenFiles = !showHiddenFiles
+    }
+
+    fun increaseFileDisplaySize() {
+        fileDisplaySize = min(fileDisplaySize + 25, 300)
+    }
+
+    fun decreaseFileDisplaySize() {
+        fileDisplaySize = max(fileDisplaySize - 25, 50)
+    }
+
 }
 
 enum class SearchStatus {
